@@ -1,0 +1,483 @@
+// ONLY MASTER SC
+
+
+
+// MASTER_ADMIN
+
+
+
+// struct for internal msg 
+message$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  in_msg_body:^Cell
+  msg_value:Coins
+} = InternalMsgBody;
+
+// struct for admin_make_tx_process
+admin_make_tx$_ {
+  message:message
+  tx_cell:^Cell
+  send_mode:uint16
+} = AdminMakeTx;
+
+// struct for admin_set_store_process
+admin_set_store$_ {
+  message:message
+  store_data:^Cell
+} = AdminSetStore;
+
+// struct for on_upgrade
+on_upgrade$6969 {
+  my_balance:Coins
+  msg_value:Coins
+  in_msg_full:^Cell
+  in_msg_body:^Cell
+} = OnUpgrade;
+
+// struct for admin_set_code_process
+admin_set_code$_ {
+  message:message
+  new_code:^Cell
+} = AdminSetCode;
+
+// struct for admin_set_dynamics_process
+admin_set_dynamics$_ {
+  message:message
+  last_invoke:uint32
+  total_supply:uint64
+  total_synts_minted:uint64
+  total_synt_fees:uint64
+} = AdminSetDynamics;
+
+// struct admin_set_conf_process
+admin_set_conf$_ {
+  message:message
+  usd_decimal:uint8
+  synt_decimal:uint8
+  target_c_ratio:uint64
+  forced_liquidation_penalty:uint64
+  admin_address:MsgAddress
+  wh_guardians:^Cell
+  ton_id:uint256
+  synt_id:uint256
+  blank_code:^Cell
+  last_user_code:^Cell
+} = AdminSetConf;
+
+// struct for MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// struct for Coins
+coins$_ amount:(VarUInteger 16) = Coins;
+
+// struct for Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// struct for Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+
+
+// MASTER_BURN
+
+
+
+// struct for burn_process
+burn_request$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  user_owner_address:MsgAddress
+  prices_packed:^Cell
+  synt_amount_to_burn:uint64
+  deposited_ton:uint64
+  synt_minted:uint64
+  last_user_invoke:uint32
+  minimal_user_stake_in_current_epoch:uint64
+} = BurnRequest;
+
+// struct for prices packed
+prices_packed$_ {
+  vaa_signatures:^Cell
+  vaa_body:^Cell
+  ton_price_cell:^Cell
+  synt_price_cell:^Cell
+} = PricesPacked;
+
+// struct for price cell
+price_cell$_ {
+  proofs:^Cell
+  payload:^Cell
+} = PriceCell;
+
+// struct for fees data
+fees_data$_ {
+  epoch_started_at:uint32
+  stake_accumulated:uint64
+  fees_accumulated:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// struct for log data
+log_data$_ {
+  code:uint8
+  ton_price:uint64
+  synt_price:uint64
+  timestamp:uint32
+  query_id:uint64
+  ton_to_withdraw:uint64
+  synt_amount_to_burn:uint64
+  deposited_ton_new:uint64
+  synt_minted_new:uint64
+  total_supply:uint64
+  total_synts_minted:uint64
+  last_user_invoke:uint32
+  deposited_ton:uint64
+  synt_minted:uint64
+  addresses:^Cell
+} = LogData;
+
+// struct for log addresses
+log_addresses$_ {
+  user_owner_address:MsgAddress
+  sender_address:MsgAddress
+} = LogAddresses;
+
+// struct for burn success
+burn_success$_ {
+  op:uint32
+  query_id:uint64
+  synt_amount_to_burn:uint64
+  ton_to_withdraw:uint64
+} = BurnSuccess;
+
+// struct for MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// struct for Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// struct for Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// struct for fees map
+fees_map$_ {X:Type} n:(## 16) root:^(HashmapE 16 X) = FeesMap X;
+
+
+
+// MASTER_FEES
+
+
+
+// struct for fees_process
+fees_process$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  user_owner_address:MsgAddress
+  fees:uint64
+} = FeesProcess;
+
+// struct for fees_claim_process
+fees_claim_process$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  user_owner_address:MsgAddress
+  user_epochs:^Cell
+  epochs_to_claim:^Cell
+} = FeesClaimProcess;
+
+// struct for fees_data
+fees_data$_ {
+  epoch_started_at:uint32
+  stake_accumulated:uint64
+  fees_accumulated:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// struct for user_fees_data
+user_fees_data$_ {
+  epoch_started_at:uint32
+  minimal_staked_amount:uint64
+  fees_withdrawn:uint64
+} = UserFeesData;
+
+// struct for fees_claim_success
+fees_claim_success$_ {
+  op:uint32
+  query_id:uint64
+  fees_to_withdraw_total:uint64
+  user_epochs:^Cell
+} = FeesClaimSuccess;
+
+// struct for fees_map
+fees_map$_ {X:Type} n:(## 16) root:^(HashmapE 16 X) = FeesMap X;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ data:bits = Cell;
+
+
+
+// MASTER_LIQUIDATE
+
+
+
+// struct for liquidate_process
+liquidate_process$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  user_owner_address:MsgAddress
+  liquidator_user_owner_address:MsgAddress
+  prices_packed:^PricesPacked
+  deposited_ton:uint64
+  synt_minted:uint64
+  liquidation_repay_amount:uint64
+  last_user_invoke:uint32
+  minimal_user_stake_in_current_epoch:uint64
+} = LiquidateProcess;
+
+// struct for prices_packed
+prices_packed$_ {
+  vaa_signatures:^Cell
+  vaa_body:^VAABody
+  ton_price_cell:^PriceCell
+  synt_price_cell:^PriceCell
+} = PricesPacked;
+
+// struct for vaa_body
+vaa_body$_ {
+  price_vaa_assertation_time:uint32
+  // Другие поля VAA, если необходимо
+} = VAABody;
+
+// struct for price_cell
+price_cell$_ {
+  proofs:^Cell
+  payload:^PricePayload
+} = PriceCell;
+
+// struct for price_payload
+price_payload$_ {
+  price_value:uint64
+  price_decimal:uint8
+  asset_id:uint256
+} = PricePayload;
+
+// struct for fees_data
+fees_data$_ {
+  epoch_started_at:uint32
+  stake_accumulated:uint64
+  fees_accumulated:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// struct for log_data
+log_data$_ {
+  code:uint8
+  ton_price:uint64
+  synt_price:uint64
+  timestamp:uint32
+  query_id:uint64
+  redeem_ton_targeted:uint64
+  liquidation_repay_amount:uint64
+  deposited_ton_new:uint64
+  synt_minted_new:uint64
+  total_supply:uint64
+  total_synts_minted:uint64
+  last_user_invoke:uint32
+  deposited_ton:uint64
+  synt_minted:uint64
+  addresses:^Cell
+} = LogData;
+
+// struct for log_addresses
+log_addresses$_ {
+  user_owner_address:MsgAddress
+  sender_address:MsgAddress
+  liquidator_user_owner_address:MsgAddress
+  liquidator_address:MsgAddress
+} = LogAddresses;
+
+
+// struct for liquidate_process_success
+liquidate_process_success$_ {
+  op:uint32
+  query_id:uint64
+  liquidation_repay_amount:uint64
+  redeem_ton_targeted:uint64
+  liquidator_user_owner_address:MsgAddress
+} = LiquidateProcessSuccess;
+
+// struct for liquidate_process_fail
+liquidate_process_fail$_ {
+  op:uint32
+  query_id:uint64
+  liquidation_repay_amount:uint64
+  deposited_ton:uint64
+  liquidator_user_owner_address:MsgAddress
+} = LiquidateProcessFail;
+
+// fees_map
+fees_map$_ {X:Type} n:(## 16) root:^(HashmapE 16 X) = FeesMap X;
+
+// MsgAddress 
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Bool
+true$1 = Bool;
+false$0 = Bool;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+
+
+// MASTER_MINT
+
+
+
+// struct for mint_process
+mint_process$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  user_owner_address:MsgAddress
+  prices_packed:^PricesPacked
+  ton_amount:uint64
+  is_user_already_inited:Bool
+  last_user_invoke:uint32
+  deposited_ton:uint64
+  synt_minted:uint64
+} = MintProcess;
+
+// struct for prices_packed
+prices_packed$_ {
+  vaa_signatures:^Cell
+  vaa_body:^VAABody
+  ton_price_cell:^PriceCell
+  synt_price_cell:^PriceCell
+} = PricesPacked;
+
+// struct for vaa_body
+vaa_body$_ {
+  price_vaa_assertation_time:uint32
+  // Другие поля VAA, если необходимо
+} = VAABody;
+
+// struct for price_cell
+price_cell$_ {
+  proofs:^Cell
+  payload:^PricePayload
+} = PriceCell;
+
+// struct for price_payload
+price_payload$_ {
+  price_value:uint64
+  price_decimal:uint8
+  asset_id:uint256
+} = PricePayload;
+
+// struct for fees_data
+fees_data$_ {
+  epoch_started_at:uint32
+  stake_accumulated:uint64
+  fees_accumulated:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// struct for log_data
+log_data$_ {
+  code:uint8
+  ton_price:uint64
+  synt_price:uint64
+  timestamp:uint32
+  query_id:uint64
+  ton_amount:uint64
+  amount_synts_to_mint:uint64
+  deposited_ton_new:uint64
+  max_issuible_synts_for_user:uint64
+  total_supply:uint64
+  total_synts_minted:uint64
+  last_user_invoke:uint32
+  deposited_ton:uint64
+  synt_minted:uint64
+  addresses:^LogAddresses
+} = LogData;
+
+// struct for log_addresses
+log_addresses$_ {
+  user_owner_address:MsgAddress
+  user_contract_address:MsgAddress
+} = LogAddresses;
+
+// struct for mint_success
+mint_success$_ {
+  op:uint32
+  query_id:uint64
+  amount_synts_to_mint:uint64
+  last_user_invoke:uint32
+  ton_amount:uint64
+  index:uint16
+  epoch_started_at:uint32
+  user_init_data:Maybe ^UserInitData
+} = MintSuccess;
+
+// user_init_data
+user_init_data$_ {
+  metadata:^Cell
+  config:^Cell
+  dynamics:^Cell
+} = UserInitData;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+// Bool
+true$1 = Bool;
+false$0 = Bool;
+
+// fees_map
+fees_map$_ {X:Type} n:(## 16) root:^(HashmapE 16 X) = FeesMap X;

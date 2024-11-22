@@ -1,0 +1,491 @@
+// ONLY USER SC
+
+
+
+// USER_ADMIN
+
+
+
+// struct for admin_make_tx_process
+admin_make_tx$_ {
+  message:IncomingMessage
+  tx_cell:^Cell
+  send_mode:uint16
+} = AdminMakeTx;
+
+// struct for admin_set_store_process
+admin_set_store$_ {
+  message:IncomingMessage
+  store_data:^Cell
+} = AdminSetStore;
+
+// struct for on_upgrade
+on_upgrade$6969 {
+  my_balance:Coins
+  msg_value:Coins
+  in_msg_full:^Cell
+  in_msg_body:^Cell
+} = OnUpgrade;
+
+// struct for admin_set_code_process
+admin_set_code$_ {
+  message:IncomingMessage
+  in_msg_full:^Cell
+  new_code:^Cell
+} = AdminSetCode;
+
+// struct for admin_set_dynamics_process
+admin_set_dynamics$_ {
+  message:IncomingMessage
+  is_locked:uint32
+  last_invoke:uint32
+  deposited_ton:uint64
+  synt_balance:uint64
+  synt_minted:uint64
+  synt_locked:uint64
+  synt_locked_by_liquidation:uint64
+} = AdminSetDynamics;
+
+// struct for admin_set_conf_process
+admin_set_conf$_ {
+  message:IncomingMessage
+  blank_code:^Cell
+  last_user_code:^Cell
+  synt_id:uint256
+  config_addresses:^ConfigAddresses
+} = AdminSetConf;
+
+// struct for config_addresses
+config_addresses$_ {
+  master_address:MsgAddress
+  owner_address:MsgAddress
+  admin_address:MsgAddress
+} = ConfigAddresses;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+// Coins
+coins$_ amount:(VarUInteger 16) = Coins;
+
+
+
+// USER_BURN 
+
+
+
+// struct for burn_request
+burn_request$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  prices_packed:^Cell
+  synts_amount_to_burn:uint64
+} = BurnRequest;
+
+// struct for fees_data
+fees_data$_ {
+  epoch_started_at:uint32
+  minimal_staked_amount:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// struct for burn_process
+burn_process$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  prices_packed:^Cell
+  synts_amount_to_burn:uint64
+  deposited_ton:uint64
+  synt_minted:uint64
+  last_invoke:uint32
+  minimal_user_stake_in_current_epoch:uint64
+} = BurnProcess;
+
+// struct for burn_success
+burn_success$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  synt_amount_to_burn:uint64
+  ton_to_withdraw:uint64
+} = BurnSuccess;
+
+// struct for burn_success_fees_return
+burn_success_fees_return$_ {
+  op:uint32
+  query_id:uint64
+} = BurnSuccessFeesReturn;
+
+// struct for burn_fail_fees_return
+burn_fail_fees_return$_ {
+  op:uint32
+  query_id:uint64
+} = BurnFailFeesReturn;
+
+// fees_map
+fees_map$_ {X:Type} n:(## 16) root:^(HashmapE 16 X) = FeesMap X;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+// contract_dynamics
+contract_dynamics$_ {
+  is_locked:uint32
+  last_invoke:uint32
+  deposited_ton:uint64
+  synt_balance:uint64
+  synt_minted:uint64
+  synt_locked:uint64
+} = ContractDynamics;
+
+// contract_config
+contract_config$_ {
+  owner_address:MsgAddress
+  master_address:MsgAddress
+} = ContractConfig;
+
+
+// USER_FEES
+
+
+
+// struct for fees_request
+fees_request$_ {
+  message:IncomingMessage
+  epochs_to_claim:^(HashmapE 16 Bool)
+} = FeesRequest;
+
+// struct for fees_claim
+fees_claim$_ {
+  op:uint32
+  query_id:uint64
+  owner_address:MsgAddress
+  fees_map:^(HashmapE 16 FeesData)
+  epochs_to_claim:^(HashmapE 16 Bool)
+} = FeesClaim;
+
+// struct for fees_claim_success
+fees_claim_success$_ {
+  message:IncomingMessage
+  synts_amount_to_mint:uint64
+  fees_map:^(HashmapE 16 FeesData)
+} = FeesClaimSuccess;
+
+// struct for fees_claim_fail
+fees_claim_fail$_ {
+  message:IncomingMessage
+} = FeesClaimFail;
+
+// struct for fees_data
+fees_data$_ {
+  epoch_started_at:uint32
+  minimal_staked_amount:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// struct for fees_claim_success_return
+fees_claim_success_return$_ {
+  op:uint32
+  query_id:uint64
+} = FeesClaimSuccessReturn;
+
+// struct for fees_claim_success 
+fees_claim_fail_return$_ {
+  op:uint32
+  query_id:uint64
+} = FeesClaimFailReturn;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+// Bool
+true$1 = Bool;
+false$0 = Bool;
+
+
+
+// USER_LIQUIDATE
+
+
+
+// struct for liquidate_init
+liquidate_init$_ {
+  message:IncomingMessage
+  prices_packed:^Cell
+  liquidation_repay_amount:uint64
+  user_to_liquidate:MsgAddress
+} = LiquidateInit;
+
+// struct for liquidate_request
+liquidate_request$_ {
+  message:IncomingMessage
+  liquidator_user_owner_address:MsgAddress
+  prices_packed:^Cell
+  liquidation_repay_amount:uint64
+} = LiquidateRequest;
+
+// struct for liquidate_process
+liquidate_process$_ {
+  op:uint32
+  query_id:uint64
+  owner_address:MsgAddress
+  liquidator_user_owner_address:MsgAddress
+  prices_packed:^Cell
+  deposited_ton:uint64
+  avl_synts_to_liquidate:uint64
+  liquidation_repay_amount:uint64
+  last_invoke:uint32
+  minimal_user_stake_in_current_epoch:uint64
+} = LiquidateProcess;
+
+// struct for liquidate_process_success
+liquidate_process_success$_ {
+  message:IncomingMessage
+  liquidation_repay_amount:uint64
+  ton_to_withdraw:uint64
+  liquidator_user_owner_address:MsgAddress
+} = LiquidateProcessSuccess;
+
+// struct for liquidate_process_fail
+liquidate_process_fail$_ {
+  message:IncomingMessage
+  liquidation_repay_amount:uint64
+  liquidator_user_owner_address:MsgAddress
+} = LiquidateProcessFail;
+
+// struct for liquidate_success
+liquidate_success$_ {
+  message:IncomingMessage
+  user_owner_address:MsgAddress
+  liquidation_repay_amount:uint64
+} = LiquidateSuccess;
+
+// struct for liquidate_fail
+liquidate_fail$_ {
+  message:IncomingMessage
+  user_owner_address:MsgAddress
+  liquidation_repay_amount:uint64
+} = LiquidateFail;
+
+// struct for fees_data
+fees_data$_ {
+  epoch_started_at:uint32
+  minimal_staked_amount:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// fees_map
+fees_map$_ {X:Type} n:(## 16) root:^(HashmapE 16 X) = FeesMap X;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+
+
+// USER_MINT
+
+
+
+// struct for mint_request
+mint_request$_ {
+  message:IncomingMessage
+  ton_amount:uint64
+  prices_packed:^Cell
+} = MintRequest;
+
+// struct for mint_process
+mint_process$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  prices_packed:^Cell
+  ton_amount:uint64
+  last_invoke:uint32
+  deposited_ton:uint64
+  synt_minted:uint64
+} = MintProcess;
+
+// struct for mint_success
+mint_success$_ {
+  message:IncomingMessage
+  synts_amount_to_mint:uint64
+  last_invoke:uint32
+  ton_amount:uint64
+  next_epoch_index:uint16
+  next_fees_epoch_started_at:uint32
+} = MintSuccess;
+
+// struct for fees_data
+fees_data$_ {
+  epoch_started_at:uint32
+  minimal_staked_amount:uint64
+  fees_withdrawn:uint64
+} = FeesData;
+
+// struct for mint_success_fees_return
+mint_success_fees_return$_ {
+  op:uint32
+  query_id:uint64
+} = MintSuccessFeesReturn;
+
+// struct for mint_fail_fees_return
+mint_fail_fees_return$_ {
+  op:uint32
+  query_id:uint64
+} = MintFailFeesReturn;
+
+// fees_map
+fees_map$_ {X:Type} n:(## 16) root:^(HashmapE 16 X) = FeesMap X;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+// Bool
+true$1 = Bool;
+false$0 = Bool;
+
+
+
+// USER_TRANSFER
+
+
+
+// struct for send_tokens
+send_tokens$_ {
+  message:IncomingMessage
+  jetton_amount:Coins
+  to_owner_address:MsgAddress
+  response_address:MsgAddress
+  custom_payload:(Maybe ^Cell)
+  forward_ton_amount:Coins
+  forward_payload:(Either Cell ^Cell)
+} = SendTokens;
+
+// struct for receive_tokens
+receive_tokens$_ {
+  message:IncomingMessage
+  jetton_amount:Coins
+  from_address:MsgAddress
+  response_address:MsgAddress
+  forward_ton_amount:Coins
+  forward_payload:(Maybe ^Cell)
+} = ReceiveTokens;
+
+// struct for internal_transfer
+internal_transfer$_ {
+  op:uint32
+  query_id:uint64
+  amount:Coins
+  from:MsgAddress
+  response_address:MsgAddress
+  forward_ton_amount:Coins
+  init_header:^Cell
+  forward_payload:(Either Cell ^Cell)
+} = InternalTransfer;
+
+// struct for transfer_notification
+transfer_notification$_ {
+  op:uint32
+  query_id:uint64
+  amount:Coins
+  sender:MsgAddress
+  forward_payload:(Either Cell ^Cell)
+} = TransferNotification;
+
+// struct for excesses
+excesses$_ {
+  op:uint32
+  query_id:uint64
+} = Excesses;
+
+// struct for fees
+fees$_ {
+  op:uint32
+  query_id:uint64
+  sender_address:MsgAddress
+  fees_for_transfer:uint64
+} = Fees;
+
+// MsgAddress
+addr_std$10 anycast:(Maybe Anycast) 
+  workchain_id:int8 address:bits256 = MsgAddress;
+
+// Maybe
+nothing$0 {X:Type} = Maybe X;
+just$1 {X:Type} value:X = Maybe X;
+
+// Either
+left$0 {X:Type} {Y:Type} value:X = Either X Y;
+right$1 {X:Type} {Y:Type} value:Y = Either X Y;
+
+// Anycast
+anycast_info$_ depth:(#<= 30) { depth >= 1 }
+   rewrite_pfx:(bits depth) = Anycast;
+
+// Cell
+cell$_ bits:(VarUInteger 1023) refs:(VarUInteger 4) = Cell;
+
+// Coins
+coins$_ amount:(VarUInteger 16) = Coins;
